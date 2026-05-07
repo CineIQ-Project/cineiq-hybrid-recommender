@@ -1,7 +1,6 @@
 import os
 import joblib
 from fastapi import FastAPI
-from surprise import dump
 
 # Initialize the Server
 app = FastAPI(title="CineIQ Hybrid Engine")
