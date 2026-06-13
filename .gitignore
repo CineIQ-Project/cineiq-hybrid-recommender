@@ -1,13 +1,18 @@
-# CineIQ Machine Learning .gitignore
 
-# 1. Datasets & Massive Files
+# CineIQ .gitignore-------->>
+
+# 1. Datasets & Raw Files
+# Ignore everything inside data/, EXCEPT the .gitkeep file
+data/*
+!data/.gitkeep
 *.csv
 *.tsv
 *.dat
 
-# 2. Machine Learning Models & Artifacts
-artifacts/
-models/
+# 2. ML Models & Generated Artifacts
+# Ignore everything inside artifacts/, EXCEPT the .gitkeep file
+artifacts/*
+!artifacts/.gitkeep
 *.pkl
 *.h5
 *.pt
@@ -16,18 +21,20 @@ models/
 # 3. Experiment Tracking Logs
 mlruns/
 experiment_log/
-*.json 
+*.db
+*.log
 
 # 4. Jupyter Notebook Checkpoints
 .ipynb_checkpoints/
 
 # 5. Python Cache & Virtual Environments
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
 env/
 venv/
-cineiq/
 .venv/
+cineiq/
 
-# 6. API Secrets
+# 6. Environment Variables & Secrets
 .env
