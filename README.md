@@ -1,35 +1,20 @@
 # CineIQ-by-Coding-Club-
-<br>
-<br>
-<br>
-PROBLEM STATEMENT
-<br>
-Content discovery on modern streaming platforms is opaque, biased toward promoted titles, and traps users in recommendation loops. There is a need for an open, explainable movie recommendation engine that combines multiple ML strategies to deliver personalized, interpretable suggestions that evolve with user taste over time.
-<br>
-DELIVERABLES
-<br>
-• Hybrid Recommendation Engine: Combines collaborative filtering, content- based filtering (TF-IDF + cosine similarity), and SVD-based matrix factorization via a weighted ensemble
-<br>
-• Sentiment-Aware Re-Ranker: Uses VADER/DistilBERT on user reviews to re-rank recommendations based on real audience reception signals
-<br>
-• User Taste Dashboard: Streamlit interface visualizing genre radar charts, decade preferences, and director/actor affinities from rating history
-<br>
-• Explainability Layer: Every recommendation surfaces a human-readable reason using LIME or rule-based templates
-<br>
-DATASETS:
-<br>
-• MovieLens 25M-grouplens.org/datasets/movielens/25m
-<br>
-• TMDB Metadata (Kaggle) — cast, genres, keywords for 45K movies
-<br>
-• IMDB 50K Reviews (Kaggle) — for sentiment model training
-<br>
-TECH STACK:
-<br>
-• ML: Python, scikit-learn, Surprise (SVD), Pandas, NumPy
-<br>
-• NLP: VADER / HuggingFace DistilBERT
-<br>
-• Serving: FastAPI (/recommend and /similar endpoints) Dashboard: Streamlit + Plotly
-<br>
-• Tracking: MLflow for experiment logging
+## Local Setup & Installation
+
+Because the training datasets and machine learning models are too large for GitHub, you will need to generate them locally before booting the server.
+
+**1. Clone the repository**
+`git clone https://github.com/yourusername/cineiq-hybrid-recommender.git`
+`cd cineiq-hybrid-recommender`
+
+**2. Download the Data**
+* Download the [MovieLens Dataset](link_to_kaggle) and the [TMDB Dataset](link_to_kaggle).
+* Extract the CSV files and place them directly into the `data/` folder.
+
+**3. Train the Models**
+Open the `models/` folder and run the Jupyter Notebooks (`collaborative_filtering.ipynb` and `content_filtering.ipynb`). This will read the CSVs from the data folder, train the AI, and automatically save the `.pkl` models into the `artifacts/` folder.
+
+**4. Boot the Microservices**
+Open two terminals.
+Terminal 1 (The Brain): `cd backend && uvicorn backend_new:app --reload`
+Terminal 2 (The Face): `cd frontend && streamlit run frontend_new.py`
