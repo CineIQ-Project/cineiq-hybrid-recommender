@@ -4,116 +4,96 @@ A hybrid movie recommendation system that integrates content-based filtering and
 
 ## Project Overview
 
-CineIQ implements a two-pronged recommendation strategy. The content-based filtering pipeline constructs item feature vectors from TMDB movie metadata -- including genre taxonomies, cast and crew attributions, and keyword descriptors -- and computes pairwise similarity scores to surface thematically related titles. The collaborative filtering pipeline operates on the MovieLens ratings corpus, decomposing the sparse user-item interaction matrix to identify latent factors that capture implicit preference structures across the user population. The hybrid architecture enables the system to mitigate the cold-start limitations inherent to purely collaborative approaches while retaining the serendipity and personalization that content-only methods lack.
+CineIQ implements a two-pronged recommendation strategy. The content-based filtering pipeline constructs item feature vectors from TMDB movie metadata and computes pairwise similarity scores to surface thematically related titles, effectively solving the "Cold Start" problem. The collaborative filtering pipeline operates on the MovieLens ratings corpus, utilizing Singular Value Decomposition (SVD) to identify latent factors that capture implicit preference structures. 
+
+This hybrid architecture mitigates the limitations inherent to purely collaborative approaches while retaining the serendipity and personalization that content-only methods lack.
 
 ## Repository Architecture
 
-```
-.
-├── app.py                                  # Streamlit/Gradio application entry point
-├── backend.py                              # Core recommendation logic and API layer
-├── collaborative_filtering(updated).ipynb  # Collaborative filtering model development
-├── content_filtering_tmdb.ipynb            # Content-based filtering model development
-├── mlflow.db                               # MLflow experiment tracking database (SQLite)
-├── requirements.txt                        # Python dependency manifest
-└── Datasets/
-    ├── credits.csv
-    ├── genome-scores.csv
-    ├── genome-tags.csv
-    ├── IMDB Dataset.csv
-    ├── keywords.csv
-    ├── links.csv
-    ├── movies.csv
-    ├── movies_metadata.csv
-    ├── ratings.csv
-    ├── tags.csv
-    ├── tmdb_5000_credits.csv
-    └── tmdb_5000_movies.csv
+Our pipeline is organized into a modular, production-ready microservice structure:
+
+```text
+CineIQ/
+├── data/                  # REQUIRED: Place your raw CSV datasets here (git-ignored)
+├── artifacts/             # Serialized .pkl models and matrices (git-ignored)
+├── models/                # ML Pipeline & Model Training
+│   ├── src/               # Custom Python modules (data_loader, config, logger, etc.)
+│   ├── collaborative_filtering.ipynb  # SVD Matrix Factorization
+│   └── content_filtering.ipynb            # NLP & Cosine Similarity
+├── backend/               # Core recommendation API layer (FastAPI)
+├── frontend/              # User-facing application (Streamlit)
+├── .gitignore             # Strict ignore rules for large datasets and MLflow logs
+└── requirements.txt       # Python dependency manifest
 ```
 
-| File | Role |
-|------|------|
-| `app.py` | Front-end application runner. Serves the user-facing recommendation interface. |
-| `backend.py` | Backend API and orchestration layer. Handles data loading, model inference, and response formatting. |
-| `collaborative_filtering(updated).ipynb` | Notebook for training and evaluating the collaborative filtering model. Contains matrix factorization experiments, hyperparameter sweeps, and evaluation metrics. |
-| `content_filtering_tmdb.ipynb` | Notebook for building the content-based filtering pipeline. Covers feature extraction from TMDB metadata, similarity computation, and qualitative evaluation. |
-| `mlflow.db` | Persistent SQLite store for MLflow experiment runs, parameters, metrics, and artifact references. |
-| `requirements.txt` | Pinned dependencies for reproducible environment setup. |
+## Datasets Required
 
-## Datasets Used
+To run this pipeline, you must acquire the following datasets from TMDB and MovieLens. 
 
-The system draws from two primary data sources:
+**Important:** You must place these exactly inside the `CineIQ/data/` directory. They are explicitly ignored by Git due to size constraints.
 
-- **TMDB (The Movie Database):** `tmdb_5000_movies.csv` and `tmdb_5000_credits.csv` provide structured metadata including genres, keywords, cast, crew, budget, revenue, and production details. Supplementary files `movies_metadata.csv`, `credits.csv`, and `keywords.csv` extend coverage across the broader TMDB catalog.
-
-- **MovieLens:** `ratings.csv`, `tags.csv`, `genome-scores.csv`, `genome-tags.csv`, `movies.csv`, and `links.csv` constitute the MovieLens dataset, providing explicit user ratings, free-text tags, and tag-genome relevance scores. The `links.csv` file maps MovieLens identifiers to TMDB and IMDB identifiers, enabling cross-dataset entity resolution.
-
-- **IMDB:** `IMDB Dataset.csv` supplements the above with additional film metadata from the IMDB catalog.
+1. `movies_metadata.csv` (TMDB)
+2. `credits.csv` (TMDB)
+3. `keywords.csv` (TMDB)
+4. `ratings.csv` (MovieLens)
+5. `movies.csv` (MovieLens)
+6. `links.csv` (MovieLens)
 
 ## Experiment Tracking
 
-Model training and evaluation experiments are tracked via [MLflow](https://mlflow.org/). The `mlflow.db` SQLite database persists all experiment metadata, including:
-
-- Hyperparameter configurations per run
-- Evaluation metrics (RMSE, precision, recall, etc.)
-- Model versioning and artifact lineage
-
-To launch the MLflow tracking UI against the local database:
-
-```bash
-mlflow ui --backend-store-uri sqlite:///mlflow.db
-```
-
-The UI will be accessible at `http://127.0.0.1:5000` by default.
+Model training and evaluation experiments are tracked via a custom `ExperimentLogger` utilizing **MLflow**. The system tracks hyperparameter configurations per run and evaluation metrics (RMSE, MAE, Precision@K). Note: To prevent repository bloat, heavy model artifacts are serialized directly to `/artifacts`, while lightweight metrics are logged locally.
 
 ## Local Setup and Installation
 
-**Prerequisites:** Python 3.8 or higher.
+**Prerequisites:** Python 3.8+
 
-1. Clone the repository:
-
+1. **Clone the repository:**
 ```bash
-git clone https://github.com/<username>/CineIQ.git
+git clone [https://github.com/](https://github.com/)<username>/CineIQ.git
 cd CineIQ
 ```
 
-2. Create and activate a virtual environment:
-
+2. **Create and activate a virtual environment:**
 ```bash
 python -m venv venv
-source venv/bin/activate        # Linux / macOS
-venv\Scripts\activate           # Windows
+# On Windows:
+venv\Scripts\activate
+# On Linux/Mac:
+source venv/bin/activate
 ```
 
-3. Install dependencies:
-
+3. **Install dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
 
-## Usage
+4. **Prepare Data:** Download the 6 required CSV files listed above and place them into the `CineIQ/data/` folder.
 
-**Run the application front-end:**
+## Usage & Execution
 
+### 1. Train the Models
+To generate the `.pkl` files needed for the recommendation engine, navigate to the models directory and execute the notebooks:
 ```bash
-python app.py
+cd models
+jupyter notebook content_filtering.ipynb
+jupyter notebook collaborative_filtering.ipynb
 ```
+*(Verify that 5 `.pkl` files are successfully generated inside the `/artifacts` folder before proceeding.)*
 
-**Run the backend service independently:**
-
+### 2. Run the Backend API Service
+Boot up the core recommendation logic layer:
 ```bash
-python backend.py
+cd backend
+uvicorn backendlime:app --reload
 ```
+*(The API will be accessible at http://localhost:8000)*
 
-**Reproduce model training:**
-
-Open the Jupyter notebooks for interactive execution:
-
+### 3. Run the Frontend Interface
+In a separate terminal, launch the user interface:
 ```bash
-jupyter notebook collaborative_filtering(updated).ipynb
-jupyter notebook content_filtering_tmdb.ipynb
+cd frontend
+streamlit run frontendlime.py
 ```
 
 ## License
-
 This project is provided as-is for educational and research purposes.
