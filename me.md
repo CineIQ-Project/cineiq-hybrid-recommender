@@ -18,8 +18,8 @@ CineIQ/
 ├── artifacts/             # Serialized .pkl models and matrices (git-ignored)
 ├── models/                # ML Pipeline & Model Training
 │   ├── src/               # Custom Python modules (data_loader, config, logger, etc.)
-│   ├── collaborative_filtering(updated).ipynb  # SVD Matrix Factorization
-│   └── content_filtering_tmdb.ipynb            # NLP & Cosine Similarity
+│   ├── collaborative_filtering.ipynb  # SVD Matrix Factorization
+│   └── content_filtering.ipynb            # NLP & Cosine Similarity
 ├── backend/               # Core recommendation API layer (FastAPI)
 ├── frontend/              # User-facing application (Streamlit)
 ├── .gitignore             # Strict ignore rules for large datasets and MLflow logs
