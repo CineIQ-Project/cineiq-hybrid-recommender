@@ -1,4 +1,6 @@
 # CineIQ
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/014831c3-19e7-49a1-901e-8d23f0a59160" />
+
 
 A hybrid movie recommendation system that integrates content-based filtering and collaborative filtering to generate personalized film suggestions. The system leverages metadata features (genres, cast, crew, keywords) alongside user-rating interaction patterns to produce recommendations that balance item similarity with latent preference modeling.
 
