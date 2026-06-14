@@ -5,7 +5,7 @@ A hybrid movie recommendation system that integrates content-based filtering and
 
 ## Project Overview
 ### Project Demo
-**[Click here to watch the CineIQ feature demonstration](DRIVE_LINK)** 
+**[Click here to watch the CineIQ feature demonstration](https://drive.google.com/file/d/1LM5s3FCkCQjnhCLARdv6TkJUFGIzuCzE/view?usp=sharing)** 
 
 
 CineIQ implements a two-pronged recommendation strategy. The content-based filtering pipeline constructs item feature vectors from TMDB movie metadata and computes pairwise similarity scores to surface thematically related titles, effectively solving the "Cold Start" problem. The collaborative filtering pipeline operates on the MovieLens ratings corpus, utilizing Singular Value Decomposition (SVD) to identify latent factors that capture implicit preference structures. 
