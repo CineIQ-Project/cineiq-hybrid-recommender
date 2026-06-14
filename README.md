@@ -99,5 +99,3 @@ cd frontend
 streamlit run frontendlime.py
 ```
 
-## License
-This project is provided as-is for educational and research purposes.
