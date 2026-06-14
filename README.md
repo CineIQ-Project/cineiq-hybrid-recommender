@@ -50,8 +50,8 @@ Model training and evaluation experiments are tracked via a custom `ExperimentLo
 
 1. **Clone the repository:**
 ```bash
-git clone [https://github.com/](https://github.com/)<username>/CineIQ.git
-cd CineIQ
+git clone https://github.com/CineIQ-Project/cineiq-hybrid-recommender.git
+cd cineiq-hybrid-recommender
 ```
 
 2. **Create and activate a virtual environment:**
